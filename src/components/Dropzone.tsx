@@ -1,6 +1,6 @@
 
 import React, { useCallback, useMemo } from 'react';
-import { useDropzone } from 'react-dropzone'
+import { useDropzone, FileWithPath, FileError } from 'react-dropzone'
 import { Container, Typography } from '@mui/material';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
@@ -55,18 +55,14 @@ const FileDropzone = () => {
         isDragAccept
     ]);
 
-    const acceptedFileItems = acceptedFiles.map(file => (
-        // @ts-ignore
+    const acceptedFileItems = acceptedFiles.map((file: FileWithPath) => (
         <li key={file.path}>
-            {/* @ts-ignore*/}
             {file.path} - {file.size} bytes
         </li>
     ));
 
-    const fileRejectionItems = fileRejections.map(({ file, errors }) => (
-        // @ts-ignore
+    const fileRejectionItems = fileRejections.map(({ file, errors }: { file: FileWithPath, errors: FileError[] }) => (
         <li key={file.path}>
-            {/* @ts-ignore*/}
             {file.path} - {file.size} bytes
             <ul>
                 {errors.map(e => (
@@ -83,6 +79,7 @@ const FileDropzone = () => {
                 <div {...getRootProps({ style })}>
                     <input {...getInputProps()} />
                     <p>Drag 'n' drop pdf file in here</p>
+                    <SaveAltIcon style={{ fontSize: "2.5em" }} />
                 </div>
             </div>
             <aside>
