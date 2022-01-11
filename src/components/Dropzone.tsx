@@ -3,6 +3,9 @@ import React, { useCallback, useMemo } from 'react';
 import { useDropzone, FileWithPath, FileError } from 'react-dropzone'
 import { Container, Typography } from '@mui/material';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import handlePDF from './PDFHandler';
+import { convertToObject } from 'typescript';
+
 
 const baseStyle = {
     flex: 1,
@@ -35,7 +38,8 @@ const rejectStyle = {
 
 const FileDropzone = () => {
     const onDrop = useCallback(acceptedFiles => {
-        // Do something with the files
+        handlePDF(acceptedFiles)
+
     }, [])
     const { acceptedFiles, fileRejections,
         getRootProps, getInputProps,
