@@ -3,15 +3,28 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import * as pdfjsLib from "pdfjs-dist/build/pdf";
 
 
+
 export default function PdfViewer({ url }) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
-  console.log(pdfjsLib)
   const canvasRef = useRef();
-
 
   const [pdfRef, setPdfRef] = useState();
   const [currentPage, setCurrentPage] = useState(1);
+
+  const extractText = loadedPdf => {
+    console.log(loadedPdf.numPages)
+    loadedPdf.getPage(currentPage)
+      .then(page => {
+        return page.getTextContent();
+      })
+      .then(tokenizedText => {
+        console.log(tokenizedText)
+        const pageText = tokenizedText.items.map(token => token.str).join("");
+        console.log(pageText)
+        return pageText
+      })
+  }
 
   const renderPage = useCallback((pageNum, pdf = pdfRef) => {
     pdf && pdf.getPage(pageNum).then(function (page) {
@@ -34,7 +47,10 @@ export default function PdfViewer({ url }) {
   useEffect(() => {
     const loadingTask = pdfjsLib.getDocument(url);
     loadingTask.promise.then(loadedPdf => {
-      setPdfRef(loadedPdf);
+      //console.log(loadedPdf)
+      // setPdfRef(loadedPdf);
+      extractText(loadedPdf)
+
     }, function (reason) {
       console.error(reason);
     });
